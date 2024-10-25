@@ -42,15 +42,22 @@
 <body>
     <div class="container">
         <h1>缺失鱼种钓鱼地图查询</h1>
-        <textarea id="searchInput" placeholder="输入缺失的鱼种名称（用逗号分隔）      如有错误，请联系桑桑：1524131940（QQ）" rows="4" style="width: 100%; height: 100px; resize: vertical;"></textarea>
+        <textarea id="searchInput" placeholder="输入缺失的鱼种名称（用逗号分隔）" rows="4" style="width: 100%; height: 100px; resize: vertical;"></textarea>
+        <form action="/distance" method="post">
+            <label for="spot">请输入钓鱼地点：</label>
+            <input type="text" id="locationInput" placeholder="请输入地点名" />
+<button onclick="calculateDistance()">查询距离</button>
+            
+        </form>
         <div id="results"></div>
     </div>
-
+    
     <script>
+        
         const fishingLocations = [
             {
                 name: "万丈海沟",
-                distance: 0,
+               
                 description: "深邃无比，海水漆黑，深处有着神秘的鱼类等待被发现。",
                 maxFish: 4,
                 fishTypes: [
@@ -63,7 +70,7 @@
             },
             {
                 name: "万丈瀑布下",
-                distance: 1,
+                
                 description: "瀑布轰鸣，水流湍急，鱼群常常藏身于瀑布后的深潭中。",
                 maxFish: 4,
                 fishTypes: [
@@ -76,7 +83,7 @@
             },
             {
                 name: "万里冰封之地",
-                distance: 3,
+              
                 description: "冰面下藏着古老鱼类，需小心严寒和突如其来的冰裂。",
                 maxFish: 3,
                 fishTypes: [
@@ -88,7 +95,7 @@
             },
             {
                 name: "九幽冥河",
-                distance: 5,
+               
                 description: "深不可测，鱼类仿佛来自幽冥之地，气氛阴森。",
                 maxFish: 4,
                 fishTypes: [
@@ -100,7 +107,7 @@
             },
             {
                 name: "九幽寒潭",
-                distance: 6,
+            
                 description: "九幽之下的寒潭，鱼类如幽灵般悄无声息。",
                 maxFish: 4,
                 fishTypes: [
@@ -112,7 +119,7 @@
             },
             {
                 name: "仙岛深处",
-                distance: 0,
+             
                 description: "湖泊宁静异常，散发着淡淡的灵气，鱼类灵动迅捷。",
                 maxFish: 4,
                 fishTypes: [
@@ -124,7 +131,7 @@
             },
             {
                 name: "仙泉旁",
-                distance: 2,
+          
                 description: "仙泉水中充满仙气，鱼类灵动而带有仙韵。",
                 maxFish: 2,
                 fishTypes: [
@@ -135,7 +142,7 @@
             },
             {
                 name: "冰魄寒域",
-                distance: 19,
+        
                 description: "水域如晶莹宝石，鱼儿游动于冰封的世界中。",
                 maxFish: 5,
                 fishTypes: [
@@ -148,7 +155,7 @@
             },
             {
                 name: "南极",
-                distance: 22,
+         
                 description: "冰寒彻骨，冰封奇异鱼类暗藏于海面下。",
                 maxFish: 3,
                 fishTypes: [
@@ -160,7 +167,7 @@
             },
             {
                 name: "地底洞穴",
-                distance: 44,
+          
                 description: "幽暗潮湿，隐藏稀有的洞穴鱼类。",
                 maxFish: 1,
                 fishTypes: [
@@ -170,7 +177,7 @@
                 ]
             }, {
                 name: "地心",
-                distance: 6,
+                
                 description: "地心深处，炽热与寒冷交替，水中生物在极端环境中成长，极为罕见。",
                 maxFish: 1,
                 fishTypes: [
@@ -182,7 +189,7 @@
             },
             {
                 name: "多维交叉核心",
-                distance: 9,
+             
                 description: "多维空间的交叉核心，时间和空间在此处交错不清。",
                 maxFish: 4,
                 fishTypes: [
@@ -194,7 +201,7 @@
             },
             {
                 name: "天台山",
-                distance: 11,
+             
                 description: "天台山下的小鱼塘，有许多小鱼在其中活动。",
                 maxFish: 3,
                 fishTypes: [
@@ -204,7 +211,7 @@
             },
             {
                 name: "天河之上",
-                distance: 18,
+              
                 description: "天河之上，星河璀璨，水流轻柔而广阔，鱼儿如星辰般灵动。",
                 maxFish: 5,
                 fishTypes: [
@@ -217,7 +224,7 @@
             },
             {
                 name: "太湖中心",
-                distance: 0,
+             
                 description: "太湖广阔无垠，湖心处水域最为深邃，常有大鱼栖息，但需耐心等待时机。",
                 maxFish: 4,
                 fishTypes: [
@@ -229,7 +236,7 @@
             },
             {
                 name: "密林深处",
-                distance: 6,
+           
                 description: "密林深处的湖泊静谧而清冷，四周林木繁茂，偶有微风拂过。",
                 maxFish: 2,
                 fishTypes: [
@@ -241,7 +248,7 @@
             },
             {
                 name: "寒潭之畔",
-                distance: 9,
+        
                 description: "寒潭之畔寒气逼人，水下的鱼类皆为耐寒之物，且行动缓慢。",
                 maxFish: 1,
                 fishTypes: [
@@ -252,7 +259,7 @@
             },
             {
                 name: "小河旁",
-                distance: 11,
+            
                 description: "清澈见底的小河水缓缓流动，微风轻拂，偶尔可见鱼群跃出水面。",
                 maxFish: 4,
                 fishTypes: [
@@ -263,7 +270,7 @@
             },
             {
                 name: "山洞深处",
-                distance: 23,
+        
                 description: "深藏于山洞中的水潭，少有人至，水中鱼类独具一格。",
                 maxFish: 2,
                 fishTypes: [
@@ -274,7 +281,7 @@
             },
             {
                 name: "山谷深处",
-                distance: 24,
+          
                 description: "隐匿于山谷深处的清泉，水流静缓，泉边花草摇曳。",
                 maxFish: 3,
                 fishTypes: [
@@ -285,7 +292,7 @@
             },
             {
                 name: "幻境之海",
-                distance: 6,
+       
                 description: "幻境之海的水面泛着迷幻的光泽，水中的鱼类极具灵性，极难捕捉，钓鱼者需全神贯注。",
                 maxFish: 1,
                 fishTypes: [
@@ -298,7 +305,7 @@
             },
             {
                 name: "幽深竹海",
-                distance: 12,
+       
                 description: "竹海深处隐秘的池塘，周围寂静无声，偶尔传来竹叶沙沙声，静坐钓鱼颇为宁静致远。",
                 maxFish: 2,
                 fishTypes: [
@@ -310,7 +317,7 @@
             },
             {
                 name: "无尽海域",
-                distance: 22,
+      
                 description: "无尽海域水天相接，广阔无垠，传说这里生存着巨大的深海怪鱼。",
                 maxFish: 4,
                 fishTypes: [
@@ -322,7 +329,7 @@
             },
             {
                 name: "无尽深渊",
-                distance: 23,
+         
                 description: "无尽深渊之中，黑暗笼罩，奇异而未知的生物游动其中。",
                 maxFish: 1,
                 fishTypes: [
@@ -336,7 +343,7 @@
             },
             {
                 name: "时空核心",
-                distance: 28,
+               
                 description: "时空核心中，水流时而停滞，时而湍急，垂钓于此，仿佛跨越时间，遇见非凡的鱼种。",
                 maxFish: 1,
                 fishTypes: [
@@ -349,7 +356,7 @@
             },
             {
                 name: "星空下",
-                distance: 5,
+               
                 description: "星空之下，微光点点，星影倒映在水中，似真似幻，垂钓者仿佛与星辰共舞。",
                 maxFish: 1,
                 fishTypes: [
@@ -361,7 +368,7 @@
             },
             {
                 name: "极北冰原",
-                distance: 19,
+               
                 description: "极北冰原寒风呼啸，冰层下隐藏着极寒鱼类，它们在冰冻世界中缓慢游动，等待被发现。",
                 maxFish: 3,
                 fishTypes: [
@@ -373,7 +380,7 @@
             },
             {
                 name: "江上",
-                distance: 25,
+                
                 description: "江水浩荡，一望无际，水流湍急之处往往藏有大鱼，垂钓江中需专注耐心。",
                 maxFish: 4,
                 fishTypes: [
@@ -385,7 +392,7 @@
             },
             {
                 name: "河畔渔家",
-                distance: 26,
+      
                 description: "河畔渔家是水边常见的景色，这里水面平静，鱼群悠闲。",
                 maxFish: 3,
                 fishTypes: [
@@ -396,7 +403,7 @@
             },
             {
                 name: "泪洒小河边",
-                distance: 0,
+
                 description: "这条小河因情而著名，河水清澈见底，垂钓于此，仿佛能听见河边往事的低语。",
                 maxFish: 2,
                 fishTypes: [
@@ -406,7 +413,7 @@
             },
             {
                 name: "清幽山谷",
-                distance: 9,
+
                 description: "山谷内四季如春，溪水清澈见底，常有灵动的小鱼游过。这里环境幽静，十分适合垂钓修炼。",
                 maxFish: 3,
                 fishTypes: [
@@ -418,7 +425,7 @@
             },
             {
                 name: "湖泊畔",
-                distance: 13,
+ 
                 description: "碧波荡漾的湖泊边，水面如镜，倒映着天边的云霞，湖中鱼儿时而成群，时而潜游。",
                 maxFish: 5,
                 fishTypes: [
@@ -431,7 +438,7 @@
             },
             {
                 name: "灵泉旁",
-                distance: 25,
+     
                 description: "灵泉水清冽甘甜，常年流淌，泉旁的水域盛产灵性十足的鱼类，垂钓者常感到身心放松。",
                 maxFish: 2,
                 fishTypes: [
@@ -442,7 +449,7 @@
             },
             {
                 name: "灵田中的石底",
-                distance: 27,
+    
                 description: "灵田中的小溪流经一片石底，水面清澈透亮。灵气滋养的鱼类常在此聚集，垂钓颇为轻松。",
                 maxFish: 2,
                 fishTypes: [
@@ -453,7 +460,7 @@
             },
             {
                 name: "瑶池仙境",
-                distance: 23,
+   
                 description: "瑶池仙境仙气缭绕，水面宛如琉璃，鱼类如仙灵般灵动，垂钓此处心境平和。",
                 maxFish: 1,
                 fishTypes: [
@@ -467,7 +474,7 @@
             },
             {
                 name: "知识之海",
-                distance: 25,
+ 
                 description: "传说中，知识之海无边无际，海中蕴含着无数智慧与奥秘。垂钓其中的鱼类，皆为灵智非凡的奇异物种。",
                 maxFish: 5,
                 fishTypes: [
@@ -480,7 +487,7 @@
             },
             {
                 name: "神木林",
-                distance: 31,
+       
                 description: "传说中的神木林里，有一条充满灵气的小溪，溪水穿过古老的树根，垂钓在此，感受到天地间的生命律动。",
                 maxFish: 2,
                 fishTypes: [
@@ -491,7 +498,7 @@
             },
             {
                 name: "神秘山洞",
-                distance: 2,
+      
                 description: "山洞深处隐匿着一片地下水域，鲜有人至。这里的鱼类因灵气滋养而独具奇特的色彩与能力。",
                 maxFish: 3,
                 fishTypes: [
@@ -502,7 +509,7 @@
             },
             {
                 name: "神秘空岛",
-                distance: 4,
+     
                 description: "空中漂浮的神秘岛屿，云雾缭绕，岛上有一片湖泊，湖水清澈如镜，鱼儿在天空之境中自由游弋。",
                 maxFish: 3,
                 fishTypes: [
@@ -514,7 +521,7 @@
             },
             {
                 name: "紫霄雷池",
-                distance: 12,
+            
                 description: "紫霄雷池内，雷电与水相交，水中蕴藏着带有雷电力量的特殊鱼类，钓鱼时周围的雷电闪烁不止。",
                 maxFish: 5,
                 fishTypes: [
@@ -527,7 +534,7 @@
             },
             {
                 name: "维度之网",
-                distance: 14,
+          
                 description: "维度之网像一张无形的巨网，将无数时空交织于此。此处水域与各个维度相连，鱼类异于常规，难以捕捉。",
                 maxFish: 5,
                 fishTypes: [
@@ -540,7 +547,7 @@
             },
             {
                 name: "肥肥崖崖底",
-                distance: 0,
+       
                 description: "肥肥崖崖底的溪流因地下暗泉滋养，水质清澈无比。崖壁遮挡了风，垂钓时静谧而清凉。",
                 maxFish: 3,
                 fishTypes: [
@@ -552,7 +559,7 @@
             },
             {
                 name: "虚无缥缈之域",
-                distance: 14,
+           
                 description: "虚无缥缈之域，介于现实与虚幻之间，水面如梦似幻，钓鱼时仿佛置身于天地之外，鱼群飘渺，极难捕捉。",
                 maxFish: 2,
                 fishTypes: [
@@ -563,7 +570,7 @@
             },
             {
                 name: "黄河旁",
-                distance: 51,
+     
                 description: "黄河波涛汹涌，河边有着丰饶的鱼类资源。尽管水流较快，但这里的鱼肉质鲜美，是垂钓者的好去处。",
                 maxFish: 4,
                 fishTypes: [
@@ -596,7 +603,6 @@
                         locationDiv.className = 'location';
                         locationDiv.innerHTML = `
                             <h3>${location.name}</h3>
-                            <p><strong>距离:</strong> ${location.distance}</p>
                             <p><strong>描述:</strong> ${location.description}</p>
                             <p><strong>最多可钓鱼数:</strong> ${location.maxFish}</p>
                             <div class="fish-info">
@@ -610,6 +616,7 @@
             }
         });
     </script>
+    
 </body>
 
 </html>
