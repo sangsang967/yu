@@ -42,14 +42,15 @@
 <body>
     <div class="container">
         <h1>缺失鱼种钓鱼地图查询</h1>
-        <textarea id="searchInput" placeholder="输入缺失的鱼种名称（用逗号分隔）" rows="4" style="width: 100%; height: 100px; resize: vertical;"></textarea>
+        <textarea id="searchInput" placeholder="输入缺失的鱼种名称（用逗号分隔）" rows="4"
+            style="width: 100%; height: 100px; resize: vertical;"></textarea>
         <form action="/distance" method="post">
         </form>
         <div id="results"></div>
     </div>
-    
+
     <script>
-         document.getElementById('searchInput').placeholder = "输入鱼种名称，使用逗号或冒号分隔\n如有错误，请联系桑桑（QQ）：1524131940";
+        document.getElementById('searchInput').placeholder = "输入鱼种名称，使用逗号或冒号分隔\n如有错误，请联系桑桑（QQ）：1524131940";
         const fishingLocations = [
             {
                 name: "万丈海沟",
@@ -578,43 +579,56 @@
             }
 
         ];
-
         const searchInput = document.getElementById('searchInput');
-        const results = document.getElementById('results');
+const results = document.getElementById('results');
 
-        searchInput.addEventListener('input', () => {
-            const query = searchInput.value.trim();
-            results.innerHTML = '';
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim();
+    results.innerHTML = '';
 
-            if (query) {
-                const queryFishList = query.split(/[，：]/).map(fish => fish.trim()); // 使用正则表达式分割并清理输入
+    if (query) {
+        const queryList = query.split(/[，：]/).map(item => item.trim()); // 分割和清理输入
 
+        fishingLocations.forEach(location => {
+            // 检查地点名称是否包含查询内容
+            const isLocationMatch = queryList.some(queryItem => location.name.includes(queryItem));
 
-                fishingLocations.forEach(location => {
-                    const matchingFish = location.fishTypes.filter(fish =>
-                        queryFishList.some(queryFish => fish.name.includes(queryFish))
-                    );
+            // 检查是否有匹配的鱼种
+            const matchingFish = location.fishTypes.filter(fish =>
+                queryList.some(queryItem => fish.name.includes(queryItem))
+            );
 
-                    if (matchingFish.length > 0) {
-                        const locationDiv = document.createElement('div');
-                        locationDiv.className = 'location';
-                        locationDiv.innerHTML = `
-                            <h3>${location.name}</h3>
-                            <p><strong>距离:</strong> ${location.distance}</p>
-                            <p><strong>描述:</strong> ${location.description}</p>
-                            <p><strong>最多可钓鱼数:</strong> ${location.maxFish}</p>
-                            <div class="fish-info">
-                                <strong>可钓鱼种类:</strong>
-                                ${matchingFish.map(fish => `<p>名字: ${fish.name}, 品阶: ${fish.rank}</p>`).join('')}
-                            </div>
-                        `;
-                        results.appendChild(locationDiv);
-                    }
-                });
+            let fishToDisplay;
+            
+            // 如果地点匹配，显示该地点下的所有鱼种
+            if (isLocationMatch) {
+                fishToDisplay = location.fishTypes; // 显示所有鱼种
+            } else if (matchingFish.length > 0) { 
+                fishToDisplay = matchingFish; // 只显示匹配的鱼种
+            }
+
+            // 如果地点匹配或有匹配的鱼种，显示该地点
+            if (fishToDisplay) {
+                const locationDiv = document.createElement('div');
+                locationDiv.className = 'location';
+                locationDiv.innerHTML = `
+                    <h3>${location.name}</h3>
+                    <p><strong>距离:</strong> ${location.distance}</p>
+                    <p><strong>描述:</strong> ${location.description}</p>
+                    <p><strong>最多可钓鱼数:</strong> ${location.maxFish}</p>
+                    <div class="fish-info">
+                        <strong>可钓鱼种类:</strong>
+                        ${fishToDisplay.map(fish => `<p>名字: ${fish.name}, 品阶: ${fish.rank}</p>`).join('')}
+                    </div>
+                `;
+                results.appendChild(locationDiv);
             }
         });
+    }
+});
+            
     </script>
-    
+
 </body>
 
 </html>
