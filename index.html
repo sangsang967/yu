@@ -691,10 +691,12 @@
                     // 检查地点名称是否包含查询内容
                     const isLocationMatch = queryList.some(queryItem => location.name.includes(queryItem));
 
-                    // 检查是否有匹配的鱼种
-                    const matchingFish = location.fishTypes.filter(fish =>
-                        queryList.some(queryItem => fish.name.includes(queryItem))
-                    );
+                    // 检查是否有匹配的鱼种或品阶
+            const matchingFish = location.fishTypes.filter(fish =>
+                queryList.some(queryItem => 
+                    fish.name.includes(queryItem) || String(fish.rank) === queryItem // 匹配鱼名或鱼的品阶
+                )
+            );
 
                     let fishToDisplay;
 
